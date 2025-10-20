@@ -1,13 +1,28 @@
 #ifndef CUTILS_H
 #define CUTILS_H
 
-#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define CU_DA_INITIAL_CAPACITY 1
+
+#ifndef CU_ASSERT
+#include <assert.h>
+#define CU_ASSERT assert
+#endif // CU_ASSERT
+
+#if !defined(CU_REALLOC) || !defined(CU_FREE)
+#include <stdlib.h>
+#endif // !defined(CU_REALLOC) || !defined(CU_FREE)
+
+#ifndef CU_REALLOC
+#define CU_REALLOC realloc
+#endif // CU_REALLOC
+
+#ifndef CU_FREE
+#define CU_FREE free
+#endif // CU_FREE
 
 #define cu_da_reserve(da, cap)                                            \
     do {                                                                  \
@@ -17,9 +32,9 @@
                     (da)->capacity = CU_DA_INITIAL_CAPACITY;              \
                 else (da)->capacity *= 2;                                 \
             }                                                             \
-            (da)->items = realloc((da)->items,                            \
+            (da)->items = CU_REALLOC((da)->items,                            \
                                   (da)->capacity * sizeof(*(da)->items)); \
-            assert((da)->items && "realloc failed");                      \
+            CU_ASSERT((da)->items && "CU_REALLOC failed");                      \
         }                                                                 \
     } while (0)
 
@@ -39,7 +54,7 @@
 
 #define cu_da_free(da)      \
     do {                    \
-        free((da)->items);  \
+        CU_FREE((da)->items);  \
         (da)->items = NULL; \
         (da)->count = 0;    \
         (da)->capacity = 0; \
