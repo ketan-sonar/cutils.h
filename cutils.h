@@ -32,9 +32,9 @@
                     (da)->capacity = CU_DA_INITIAL_CAPACITY;              \
                 else (da)->capacity *= 2;                                 \
             }                                                             \
-            (da)->items = CU_REALLOC((da)->items,                            \
+            (da)->items = CU_REALLOC((da)->items,                         \
                                   (da)->capacity * sizeof(*(da)->items)); \
-            CU_ASSERT((da)->items && "CU_REALLOC failed");                      \
+            CU_ASSERT((da)->items && "CU_REALLOC failed");                \
         }                                                                 \
     } while (0)
 
@@ -78,11 +78,11 @@ typedef struct {
 
 #define cu_sb_free(sb) cu_da_free((sb))
 
-bool cu_read_entire_file(char *filepath, CU_String_Builder *sb);
+bool cu_read_entire_file(CU_String_Builder *sb, const char *filepath);
 
 #ifdef CUTILS_IMPLEMENTATION
 
-bool cu_read_entire_file(char *filepath, CU_String_Builder *sb)
+bool cu_read_entire_file(CU_String_Builder *sb, const char *filepath)
 {
     FILE *f = fopen(filepath, "rb");
     if (!f) goto error;

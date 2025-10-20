@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     char *filepath = argv[1];
 
     CU_String_Builder contents = {0};
-    if (!cu_read_entire_file(filepath, &contents)) {
+    if (!cu_read_entire_file(&contents, filepath)) {
         fprintf(stderr, "ERROR: could not read file: %s\n", filepath);
         exit(1);
     }
